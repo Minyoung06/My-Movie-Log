@@ -1,0 +1,45 @@
+{
+  "users": [
+    {
+      "id": "test1",
+      "nickname": "홍길동",
+      "password": "testpass1",
+      "wishlist": [550, 278],
+      "ratings": [
+        {
+          "movieId": 550,
+          "score": 5.0,
+          "review": "다시 봐도 명작!"
+        }
+      ]
+    },
+    {
+      "id": "test2",
+      "nickname": "김철수",
+      "password": "testpass2",
+      "wishlist": [],
+      "ratings": []
+    },
+    {
+      "id": "test3",
+      "nickname": "세번째",
+      "password": "testpass3",
+      "wishlist": [],
+      "ratings": []
+    },
+    {
+      "id": "test4",
+      "nickname": "네번째",
+      "password": "testpass4",
+      "wishlist": [],
+      "ratings": []
+    },
+    {
+      "id": "test5",
+      "nickname": "다섯번째",
+      "password": "testpass5",
+      "wishlist": [],
+      "ratings": []
+    }
+  ]
+}
