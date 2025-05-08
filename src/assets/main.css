@@ -1,5 +1,12 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
 
+:root {
+  --color-background-light: #e6e6fa;
+  --color-text-primary: #6200e8;
+  --color-background-dark: #9a7dff;
+  --color-text-white: #ffffff;
+}
+
 * {
   font-family: 'Roboto', sans-serif;
 }
