@@ -9,7 +9,7 @@
             target="_blank"
             rel="noopener noreferrer"
             class="text-decoration-none d-flex align-items-center fs-4"
-            style="color: #ffffff"
+            style="color: var(--color-text-white)"
           >
             GitHub
           </a>
