@@ -21,17 +21,18 @@
             <div
               v-for="member in team"
               :key="member.name"
-              class="d-flex flex-row align-items-center me-3"
+              class="d-flex align-items-center me-3"
             >
               <a
                 v-if="member.link"
                 :href="member.link"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-decoration-none fs-6"
-                style="color: #ffffff"
-                ><i class="fab fa-github fa-xl me-1"></i>{{ member.name }}</a
-              >
+                class="text-decoration-none fs-6 align-items-center"
+                style="color: var(--color-text-white)"
+                ><i class="fab fa-github fa-xl me-1"></i>
+                <span>{{ member.name }}</span>
+              </a>
             </div>
           </div>
         </div>
@@ -49,7 +50,7 @@ const team = [
 
 <style scoped>
 .footer-bg {
-  background-color: #9a7dff;
-  color: #ffffff;
+  background-color: var(--color-background-dark);
+  color: var(--color-text-white);
 }
 </style>
