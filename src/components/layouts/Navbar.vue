@@ -1,8 +1,8 @@
 <template>
   <nav class="nav-bg py-4">
     <div class="container">
-      <div class="row align-items-center">
-        <div class="col-6">
+      <div class="row align-items-center flex-md-nowrap">
+        <div class="col-12 col-md-6 mb-2 mb-md-0">
           <router-link
             to="/"
             class="text-decoration-none fs-1"
@@ -10,46 +10,47 @@
             >My Movie Log</router-link
           >
         </div>
-        <div class="col-3"></div>
 
-        <div class="col-3 text-end">
+        <div class="col-12 col-md-6 text-end">
           <!-- 로그인 -->
           <div
-            v-if="isLoggedIn"
-            class="d-flex justify-content-end align-items-center"
+            v-if="userStore.isLogin"
+            class="d-flex justify-content-end align-items-center flex-wrap flex-md-nowrap"
           >
             <router-link
               to="/profile"
-              class="text-decoration-none fs-6 me-3"
+              class="text-decoration-none fs-6 me-3 link-nowrap"
               style="color: var(--color-text-primary)"
-              >{{ nickname }}</router-link
+              >{{ userStore.userInfo.nickname }}</router-link
             >
             <router-link
               to="/favorites"
-              class="text-decoration-none fs-6 me-3"
+              class="text-decoration-none fs-6 me-3 link-nowrap"
               style="color: var(--color-text-primary)"
               >찜 목록</router-link
             >
-            <!-- 로그아웃 기능 미구현. store 완성 후 추가 -->
             <router-link
               to="/"
-              class="text-decoration-none fs-6 me-3"
+              class="text-decoration-none fs-6 me-3 link-nowrap"
               style="color: var(--color-text-primary)"
               >로그아웃</router-link
             >
           </div>
 
           <!-- 로그인 X -->
-          <div v-else class="d-flex justify-content-end align-items-center">
+          <div
+            v-else
+            class="d-flex justify-content-end align-items-center flex-nowrap"
+          >
             <router-link
               to="/login"
-              class="text-decoration-none fs-6 me-3"
+              class="text-decoration-none fs-6 me-3 link-nowrap"
               style="color: var(--color-text-primary)"
               >로그인</router-link
             >
             <router-link
               to="/signup"
-              class="text-decoration-none fs-6 me-3"
+              class="text-decoration-none fs-6 me-3 link-nowrap"
               style="color: var(--color-text-primary)"
               >회원가입</router-link
             >
@@ -62,12 +63,9 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useUserStore } from '@/stores/userStore';
 
-// 임시
-// const isLoggedIn = false;
-const isLoggedIn = true;
-
-const nickname = ref('홍길동');
+const userStore = useUserStore();
 </script>
 
 <style scoped>
@@ -76,5 +74,9 @@ const nickname = ref('홍길동');
 }
 span {
   vertical-align: middle;
+}
+.link-nowrap {
+  white-space: nowrap;
+  display: inline-block;
 }
 </style>

@@ -1,9 +1,15 @@
 <template>
   <div class="container-fluid">
-    <slot name="navbar"></slot>
-    <div class="content my-5 px-3">
+    <slot v-if="!route.meta.hideLayout" name="navbar"></slot>
+    <div class="content">
       <slot></slot>
     </div>
-    <slot name="footer"></slot>
+    <slot v-if="!route.meta.hideLayout" name="footer"></slot>
   </div>
 </template>
+
+<script setup>
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+</script>
