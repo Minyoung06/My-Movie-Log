@@ -14,12 +14,19 @@ const tmdb = axios.create({
 });
 
 // 영화 검색
-export const searchMovies = async (query) => {
+export const searchMovies = async (query, maxPages = 5) => {
+  const allResults = [];
   try {
-    const response = await tmdb.get('/search/movie', {
-      params: { query },
-    });
-    return response.data.results;
+    for (let page = 1; page <= maxPages; page++) {
+      const response = await tmdb.get('/search/movie', {
+        params: { query, page },
+      });
+      allResults.push(...response.data.results);
+
+      const totalPages = response.data.total_pages;
+      if (page >= totalPages) break;
+    }
+    return allResults;
   } catch (error) {
     console.error('TMDB searchMovies error:', error);
     return [];
