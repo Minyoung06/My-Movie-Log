@@ -1,42 +1,91 @@
 <template>
   <div
-    class="d-flex justify-content-center align-items-center"
+    class="d-flex flex-column justify-content-center align-items-center"
     style="height: 100vh; background-color: #9a7dff"
   >
-    <table>
-      <tr>
-        <img src="" />
-        <br />
-      </tr>
-      <tr>
-        <td><label for="nickname">NICKNAME </label></td>
-        <td><input type="text" id="nickname" /></td>
-      </tr>
-      <tr>
-        <td><label for="id"> ID </label></td>
-        <td><input type="text" id="id" /></td>
-      </tr>
-      <tr>
-        <td><label for="password">Password </label></td>
-        <td><input type="password" id="password" /></td>
-      </tr>
-    </table>
+    <!-- 뒤로가기 버튼 -->
+    <div>
+      <RouterLink to="/login" class="back-button"><</RouterLink>
+    </div>
+    <!-- 입력창 및 표지 -->
+    <div class="row input_style g-0 mb-3">
+      <div class="col-2 d-flex justify-content-center align-items-center">
+        <i class="fa-regular fa-circle-user" style="color: #ffffff"></i>
+      </div>
+      <div class="col-10">
+        <input type="text" id="nickname" placeholder="NICKNAME" />
+      </div>
+    </div>
+    <div class="row input_style g-0 mb-3">
+      <div class="col-2 d-flex justify-content-center align-items-center">
+        <i class="fa-solid fa-user" style="color: #ffffff"></i>
+      </div>
+      <div class="col-10">
+        <input type="text" id="id" placeholder="ID" />
+      </div>
+    </div>
+    <div class="row input_style g-0 mb-5">
+      <div class="col-2 d-flex justify-content-center align-items-center">
+        <i class="fa-solid fa-lock" style="color: #ffffff"></i>
+      </div>
+      <div class="col-10">
+        <input type="text" id="password" placeholder="PASSWORD" />
+      </div>
+    </div>
+    <!-- 버튼 -->
+    <div class="mb-3">
+      <button class="badge">SIGNUP</button>
+    </div>
   </div>
 </template>
 
 <script setup></script>
 
 <style scoped>
-tr {
-  color: white;
-}
-
-td {
-  width: 130px;
-  height: 40px;
-}
-
+/* input 태그 관련 */
 input {
-  border-radius: 10px 10px;
+  background-color: transparent;
+  color: white;
+  width: 100%;
+  height: 100%;
+
+  border: none;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input_style {
+  border: 2px solid white;
+
+  width: 400px;
+  height: 50px;
+}
+
+/* 버튼 관련 */
+button {
+  background-color: white;
+  color: #9a7dff;
+  border-color: white;
+
+  font-size: 20px;
+
+  width: 400px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.back-button {
+  position: absolute;
+  top: 1px;
+  left: 40px;
+  z-index: 10; /* 겹치는 요소 위에 뜨게 */
+
+  color: white;
+  text-decoration: none;
+  font-size: 50px;
 }
 </style>
