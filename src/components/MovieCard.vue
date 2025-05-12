@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" @click="moveDetail">
     <div class="card-body">
       <img :src="imageUrl" />
     </div>
@@ -10,7 +10,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const props = defineProps({
   movie: {
@@ -18,6 +20,10 @@ const props = defineProps({
     required: true,
   },
 });
+
+const moveDetail = () => {
+  router.push(`/detail/${props.movie.id}`);
+};
 
 const imageUrl = `https://image.tmdb.org/t/p/w500${props.movie.poster_path}`;
 </script>
@@ -30,6 +36,12 @@ const imageUrl = `https://image.tmdb.org/t/p/w500${props.movie.poster_path}`;
   align-items: stretch;
   border: none;
   box-shadow: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transition: scale(1.02);
 }
 
 .card-body {
