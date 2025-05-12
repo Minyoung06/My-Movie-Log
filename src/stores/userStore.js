@@ -49,6 +49,8 @@ export const useUserStore = defineStore('userStore', () => {
         id,
         password,
         nickname,
+        wishlist: [],
+        ratings: [],
       });
       return true;
     } catch (err) {
