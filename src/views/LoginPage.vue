@@ -1,53 +1,80 @@
 <template>
   <div
-    class="d-flex justify-content-center align-items-center"
+    class="d-flex flex-column justify-content-center align-items-center"
     style="height: 100vh; background-color: #9a7dff"
   >
-    <table>
-      <tr>
-        <img src="" />
-      </tr>
-      <tr>
-        <td><label for="id"> ID </label></td>
-        <td><input type="text" id="id" /></td>
-      </tr>
-      <tr>
-        <td><label for="password">Password </label></td>
-        <td><input type="password" id="password" /></td>
-      </tr>
-      <tr>
-        <td style="height: 35px"></td>
-      </tr>
-      <tr>
-        <td>
-          <button class="badge bg-white" style="color: black">로그인</button>
-        </td>
-        <td>
-          <router-link
-            to="/signup"
-            class="badge bg-white border border-black"
-            style="color: black; text-decoration: none"
-            >회원가입</router-link
-          >
-        </td>
-      </tr>
-    </table>
+    <!-- 입력창 및 표지 -->
+    <div class="d-flex justify-content-center align-items-centers mb-3">
+      <img src="" alt="" />
+    </div>
+    <div class="row input_style g-0 mb-3">
+      <div class="col-2 d-flex justify-content-center align-items-center">
+        <i class="fa-solid fa-user" style="color: #ffffff"></i>
+      </div>
+      <div class="col-10">
+        <input type="text" id="id" placeholder="ID" />
+      </div>
+    </div>
+    <div class="row input_style g-0 mb-5">
+      <div class="col-2 d-flex justify-content-center align-items-center">
+        <i class="fa-solid fa-lock" style="color: #ffffff"></i>
+      </div>
+      <div class="col-10">
+        <input type="text" id="password" placeholder="PASSWORD" />
+      </div>
+    </div>
+    <!-- 버튼 -->
+    <div class="mb-3">
+      <button class="badge">LOGIN</button>
+    </div>
+    <div>
+      <router-link
+        to="/signup"
+        class="badge border"
+        style="text-decoration: none"
+        >SIGNUP</router-link
+      >
+    </div>
   </div>
 </template>
 
 <script setup></script>
 
 <style scoped>
-tr {
-  color: white;
-}
-
-td {
-  width: 130px;
-  height: 40px;
-}
-
+/* input 태그 관련 */
 input {
-  border-radius: 10px 10px;
+  background-color: transparent;
+  color: white;
+  width: 100%;
+  height: 100%;
+
+  border: none;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input_style {
+  border: 2px solid white;
+
+  width: 400px;
+  height: 50px;
+}
+
+/* 버튼 관련 */
+a,
+button {
+  background-color: white;
+  color: #9a7dff;
+  border-color: white;
+
+  font-size: 20px;
+
+  width: 400px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
