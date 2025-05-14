@@ -49,6 +49,14 @@ input {
   height: 100%;
 
   border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 input::placeholder {
