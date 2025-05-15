@@ -13,7 +13,12 @@
         <i class="fa-regular fa-circle-user" style="color: #ffffff"></i>
       </div>
       <div class="col-10">
-        <input type="text" id="nickname" placeholder="NICKNAME" />
+        <input
+          type="text"
+          id="nickname"
+          placeholder="NICKNAME"
+          v-model="nickname"
+        />
       </div>
     </div>
     <div class="row input_style g-0 mb-3">
@@ -21,7 +26,7 @@
         <i class="fa-solid fa-user" style="color: #ffffff"></i>
       </div>
       <div class="col-10">
-        <input type="text" id="id" placeholder="ID" />
+        <input type="text" id="id" placeholder="ID" v-model="id" />
       </div>
     </div>
     <div class="row input_style g-0 mb-5">
@@ -29,17 +34,46 @@
         <i class="fa-solid fa-lock" style="color: #ffffff"></i>
       </div>
       <div class="col-10">
-        <input type="text" id="password" placeholder="PASSWORD" />
+        <input
+          type="text"
+          id="password"
+          placeholder="PASSWORD"
+          v-model="password"
+        />
       </div>
     </div>
     <!-- 버튼 -->
     <div class="mb-3">
-      <button class="badge">SIGNUP</button>
+      <button class="badge" @click="signup">SIGNUP</button>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import router from '@/router';
+import { useUserStore } from '@/stores/userStore';
+import { ref } from 'vue';
+
+const userStore = useUserStore();
+
+const nickname = ref('');
+const id = ref('');
+const password = ref('');
+
+async function signup() {
+  const success = await userStore.signup(
+    nickname.value,
+    id.value,
+    password.value
+  );
+  if (success) {
+    alert('회원가입 성공!');
+    router.push('/login');
+  } else {
+    alert('회원가입 실패');
+  }
+}
+</script>
 
 <style scoped>
 /* input 태그 관련 */
