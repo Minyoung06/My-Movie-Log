@@ -12,7 +12,7 @@
         <i class="fa-solid fa-user" style="color: #ffffff"></i>
       </div>
       <div class="col-10">
-        <input type="text" id="id" placeholder="ID" />
+        <input type="text" id="id" placeholder="ID" v-model="id" />
       </div>
     </div>
     <div class="row input_style g-0 mb-5">
@@ -20,12 +20,17 @@
         <i class="fa-solid fa-lock" style="color: #ffffff"></i>
       </div>
       <div class="col-10">
-        <input type="text" id="password" placeholder="PASSWORD" />
+        <input
+          type="text"
+          id="password"
+          placeholder="PASSWORD"
+          v-model="password"
+        />
       </div>
     </div>
     <!-- 버튼 -->
     <div class="mb-3">
-      <button class="badge">LOGIN</button>
+      <button class="badge" @click="login">LOGIN</button>
     </div>
     <div>
       <router-link
@@ -38,7 +43,29 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import router from '@/router';
+import { useUserStore } from '@/stores/userStore';
+import { ref } from 'vue';
+
+const userStore = useUserStore();
+
+const id = ref('');
+const password = ref('');
+
+async function login() {
+  const success = await userStore.login(id.value, password.value);
+  if (success) {
+    router.push('/');
+    id.value = '';
+    password.value = '';
+  } else {
+    alert('로그인 실패!');
+    id.value = '';
+    password.value = '';
+  }
+}
+</script>
 
 <style scoped>
 /* input 태그 관련 */
