@@ -47,4 +47,13 @@ export const useFavoritesStore = defineStore('favoritesStore', () => {
       console.log(err);
     }
   }
+
+  return {
+    wishlist,
+    userStore,
+    user,
+    R_wishList,
+    C_wishList,
+    D_wishList,
+  };
 });
