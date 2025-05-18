@@ -29,12 +29,9 @@
               style="color: var(--color-text-primary)"
               >찜 목록</router-link
             >
-            <router-link
-              to="/"
-              class="text-decoration-none fs-6 me-3 link-nowrap"
-              style="color: var(--color-text-primary)"
-              >로그아웃</router-link
-            >
+            <div>
+              <button class="logout" @click="logout">로그아웃</button>
+            </div>
           </div>
 
           <!-- 로그인 X -->
@@ -63,9 +60,16 @@
 
 <script setup>
 import { ref } from 'vue';
+import router from '@/router';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
+
+const logout = () => {
+  userStore.logout();
+  alert('로그아웃 되었습니다.');
+  router.push('/');
+};
 </script>
 
 <style scoped>
@@ -78,5 +82,11 @@ span {
 .link-nowrap {
   white-space: nowrap;
   display: inline-block;
+}
+.logout {
+  text-decoration: none;
+  border: none;
+  background-color: transparent;
+  color: var(--color-text-primary);
 }
 </style>
