@@ -9,6 +9,8 @@ export const useRatingStore = defineStore('ratingStore', () => {
     score: 0,
   });
 
+  const topReviews = ref([]);
+
   const userStore = useUserStore();
 
   // 리뷰 생성 + 수정
@@ -68,6 +70,30 @@ export const useRatingStore = defineStore('ratingStore', () => {
     }
   }
 
+  // 특정 영화의 상위 3개 리뷰 가져오기
+  async function F_TopReviews(movieId) {
+    try {
+      const res = await axios.get('/api/users');
+      const users = res.data;
+      const reviews = users.flatMap((user) => {
+        const rating = user.ratings?.find((r) => r.movieId === movieId);
+        return rating && rating.review
+          ? [
+              {
+                user: user.nickname || user.id,
+                review: rating.review,
+                score: rating.score,
+              },
+            ]
+          : [];
+      });
+      topReviews.value = reviews.sort((a, b) => b.score - a.score).slice(0, 3);
+    } catch (err) {
+      console.error('리뷰 로딩 실패:', err);
+      topReviews.value = [];
+    }
+  }
+
   // 리뷰 삭제하기
   async function D_review(movieId) {
     const user = userStore.userInfo;
@@ -92,8 +118,10 @@ export const useRatingStore = defineStore('ratingStore', () => {
   return {
     reviews,
     userStore,
+    topReviews,
     CU_Review,
     R_Review,
+    F_TopReviews,
     D_review,
   };
 });

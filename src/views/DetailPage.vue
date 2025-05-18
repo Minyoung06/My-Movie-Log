@@ -17,9 +17,9 @@
             <h1 style="color: var(--color-text-primary)">{{ movie.title }}</h1>
           </div>
           <div>
-            <button class="fav-btn" @click="fav.value = !fav.value">
+            <button class="fav-btn" @click="toggleWish">
               <i
-                :class="fav.value ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
+                :class="isWished ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
               ></i>
             </button>
           </div>
@@ -60,14 +60,14 @@
         <h4 style="color: var(--color-text-primary)">Reviews</h4>
 
         <div
-          v-for="review in exReviews"
-          :key="review.id"
+          v-for="(review, index) in ratingStore.topReviews"
+          :key="index"
           class="p-3 mb-2 rounded"
         >
           <p class="mb-1 fw-bold">
-            {{ review.user }} | 평점: {{ review.rating }}
+            {{ review.user }} | 평점: {{ review.score }}
           </p>
-          <p class="mb-0 small">{{ review.comment }}</p>
+          <p class="mb-0 small">{{ review.review }}</p>
         </div>
       </div>
     </div>
@@ -75,44 +75,56 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getMovieDetails } from '@/api/tmdb';
+import { useRatingStore } from '@/stores/ratingStore';
+import { useFavoritesStore } from '@/stores/favoritesStore';
+import { useUserStore } from '@/stores/userStore';
 
 const route = useRoute();
 const router = useRouter();
 const movie = ref(null);
-const fav = ref(false);
+
+const movieId = Number(route.params.id);
+
+const ratingStore = useRatingStore();
+const favoritesStore = useFavoritesStore();
+const userStore = useUserStore();
 
 onMounted(async () => {
   const id = route.params.id;
   movie.value = await getMovieDetails(id);
 });
 
-// onMounted(() => {
-//   fav.value = favoritesStore.has(movie.id)
-// });
+watch(
+  () => userStore.userInfo.id,
+  async (id) => {
+    if (id) {
+      console.log('[DEBUG] userId is now available:', id);
+      await favoritesStore.R_wishList(id);
+    }
+  },
+  { immediate: true } // mount 시점에도 실행됨
+);
 
-const exReviews = ref([
-  {
-    id: 1,
-    user: '김철수',
-    comment: '정말 최고의 영화였어요. 감동적이고 눈물이 납니다.',
-    rating: 9.5,
-  },
-  {
-    id: 2,
-    user: '홍길동',
-    comment: '스토리와 연출이 모두 훌륭합니다. 강력 추천!',
-    rating: 9.3,
-  },
-  {
-    id: 3,
-    user: '세번째',
-    comment: '배우들의 연기가 몰입감을 높여줍니다.',
-    rating: 9.1,
-  },
-]);
+onMounted(async () => {
+  await favoritesStore.R_wishList(useRatingStore.userInfo?.id);
+});
+
+const isWished = computed(() => favoritesStore.wishlist.includes(movieId));
+
+const toggleWish = async () => {
+  if (isWished.value) {
+    await favoritesStore.D_wishList(movieId);
+  } else {
+    await favoritesStore.C_wishList(movieId);
+  }
+};
+
+onMounted(() => {
+  ratingStore.F_TopReviews(movieId);
+});
 
 const goBack = () => {
   router.back();
