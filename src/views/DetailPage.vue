@@ -108,10 +108,6 @@ watch(
   { immediate: true } // mount 시점에도 실행됨
 );
 
-onMounted(async () => {
-  await favoritesStore.R_wishList(useRatingStore.userInfo?.id);
-});
-
 const isWished = computed(() => favoritesStore.wishlist.includes(movieId));
 
 const toggleWish = async () => {
