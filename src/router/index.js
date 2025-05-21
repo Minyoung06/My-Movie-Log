@@ -31,7 +31,12 @@ const router = createRouter({
       component: Signup,
       meta: { hideLayout: true },
     },
-    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: NotFound,
+      meta: { hideLayout: true },
+    },
     { path: '/test', name: 'test', component: TestPage },
   ],
 });
