@@ -9,6 +9,16 @@ export const useUserStore = defineStore('userStore', () => {
     nickname: '',
   });
 
+  // 시작 시 localStorage 복원
+  const saved = localStorage.getItem('userInfo');
+  if (saved) {
+    try {
+      userInfo.value = JSON.parse(saved);
+    } catch (e) {
+      console.error('저장된 로그인 정보 복원 실패:', e);
+    }
+  }
+
   // 로그인 확인
   const isLogin = computed(
     () => !!userInfo.value.id && !!userInfo.value.password
@@ -23,6 +33,9 @@ export const useUserStore = defineStore('userStore', () => {
       );
       if (check) {
         userInfo.value = check;
+
+        localStorage.setItem('userInfo', JSON.stringify(check));
+
         return true;
       } else {
         throw new Error('로그인에 실패하셨습니다.');
@@ -40,6 +53,7 @@ export const useUserStore = defineStore('userStore', () => {
       password: '',
       nickname: '',
     };
+    localStorage.removeItem('userInfo');
   }
 
   // 회원가입 기능
