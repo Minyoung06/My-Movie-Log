@@ -27,11 +27,14 @@
         <div class="me-3">
           {{ movie.overview }}
         </div>
+        <!-- 상세 정보 내 -->
         <div
           class="my-3"
           style="color: var(--color-text-primary); font-size: 1.5rem"
         >
           평점:
+          <span v-if="avgScore !== null">{{ avgScore }} / 5</span>
+          <span v-else>리뷰 없음</span>
         </div>
       </div>
     </div>
@@ -40,18 +43,44 @@
     </div>
     <div class="review my-3">
       <div class="review-bar my-4">
+        <!-- 리뷰 존재 경우 -->
+        <div v-if="myReview" class="mb-3 p-3 bg-light rounded border">
+          <div class="d-flex justify-content-between align-items-start">
+            <p class="mb-1 fw-bold" style="color: var(--color-text-primary)">
+              이미 이 영화에 리뷰를 남기셨습니다.
+            </p>
+            <button @click="showModal = true" class="btn btn-sm ms-2">
+              삭제
+            </button>
+          </div>
+          <p class="mb-0 small">평점: {{ '⭐'.repeat(myReview.score) }}</p>
+          <p class="mb-0 small">내용: {{ myReview.review || '(내용 없음)' }}</p>
+        </div>
+        <!-- 입력폼 -->
         <form @submit.prevent="addReview" class="review-form">
           <div class="input-group">
+            <!-- 리뷰 입력창 -->
             <input
               type="text"
               class="form-control border-end-0"
               placeholder="Review"
+              v-model="ratingStore.reviews.review"
             />
+            <!-- 별점 선택 -->
+            <select
+              v-model.number="ratingStore.reviews.score"
+              class="form-select"
+              style="max-width: 100px"
+            >
+              <option disabled value="0">평점</option>
+              <option v-for="n in 5" :key="n" :value="n">{{ n }}점</option>
+            </select>
+            <!-- 추가 버튼 -->
             <button
               type="submit"
               class="btn btn-outline-secondary border-start-0"
             >
-              Add
+              {{ myReview ? '수정' : '추가' }}
             </button>
           </div>
         </form>
@@ -71,6 +100,13 @@
         </div>
       </div>
     </div>
+
+    <ConfirmModal
+      v-if="showModal"
+      :message="'정말 이 리뷰를 삭제하시겠습니까?'"
+      :onConfirm="confirmDelete"
+      :onCancel="cancelDelete"
+    />
   </div>
 </template>
 
@@ -82,15 +118,21 @@ import { useRatingStore } from '@/stores/ratingStore';
 import { useFavoritesStore } from '@/stores/favoritesStore';
 import { useUserStore } from '@/stores/userStore';
 
+import ConfirmModal from '@/components/ConfirmModal.vue';
+
 const route = useRoute();
 const router = useRouter();
 const movie = ref(null);
 
 const movieId = Number(route.params.id);
 
+const myReview = ref(null);
+
 const ratingStore = useRatingStore();
 const favoritesStore = useFavoritesStore();
 const userStore = useUserStore();
+
+const showModal = ref(false);
 
 onMounted(async () => {
   const id = route.params.id;
@@ -105,10 +147,17 @@ watch(
       await favoritesStore.R_wishList(id);
     }
   },
-  { immediate: true } // mount 시점에도 실행됨
+  { immediate: true }
 );
 
 const isWished = computed(() => favoritesStore.wishlist.includes(movieId));
+
+const avgScore = computed(() => {
+  const reviews = ratingStore.topReviews;
+  if (reviews.length === 0) return null;
+  const total = reviews.reduce((sum, r) => sum + r.score, 0);
+  return (total / reviews.length).toFixed(1);
+});
 
 const toggleWish = async () => {
   if (isWished.value) {
@@ -117,6 +166,51 @@ const toggleWish = async () => {
     await favoritesStore.C_wishList(movieId);
   }
 };
+
+const addReview = async () => {
+  const { review, score } = ratingStore.reviews;
+
+  if (score === 0) {
+    alert('별점을 입력해주세요.');
+    return;
+  }
+  await ratingStore.CU_Review(movieId);
+  await ratingStore.F_TopReviews(movieId);
+
+  myReview.value = {
+    movieId,
+    review,
+    score,
+  };
+};
+
+const confirmDelete = async () => {
+  await ratingStore.D_review(movieId);
+  myReview.value = null;
+  ratingStore.reviews.review = '';
+  ratingStore.reviews.score = 0;
+  await ratingStore.F_TopReviews(movieId);
+  showModal.value = false;
+};
+
+const cancelDelete = () => {
+  showModal.value = false;
+};
+
+onMounted(async () => {
+  movie.value = await getMovieDetails(movieId);
+  await ratingStore.F_TopReviews(movieId);
+
+  const user = userStore.userInfo;
+  if (user?.id) {
+    const res = await ratingStore.R_Review(movieId);
+    if (res) {
+      myReview.value = res;
+      ratingStore.reviews.review = res.review;
+      ratingStore.reviews.score = res.score;
+    }
+  }
+});
 
 onMounted(() => {
   ratingStore.F_TopReviews(movieId);
@@ -163,5 +257,15 @@ button {
 .fav-btn {
   font-size: 2rem;
   margin-right: 1rem;
+}
+
+.form-select {
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 1px solid var(--color-text-primary);
+  border-bottom: 1px solid var(--color-text-primary);
+  background-color: transparent;
+  color: var(--color-text-primary);
 }
 </style>
