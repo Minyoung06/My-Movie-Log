@@ -59,11 +59,11 @@ export const useRatingStore = defineStore('ratingStore', () => {
       const currentUser = res.data;
       const currentUserRating = currentUser.ratings;
 
-      const movieIndex = currentUserRating.findIndex(
+      const reviewObj = currentUserRating.find(
         (rating) => rating.movieId === movieId
       );
 
-      return movieIndex.review || null;
+      return reviewObj || null;
     } catch (err) {
       console.log(err);
       return null;
