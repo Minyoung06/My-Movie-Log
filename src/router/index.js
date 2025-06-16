@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { useUserStore } from '@/stores/userStore';
 
 import TestPage from '../views/TestPage.vue';
 
@@ -17,8 +18,18 @@ const router = createRouter({
     { path: '/', name: 'Home', component: Home },
     { path: '/search', name: 'Search', component: Search },
     { path: '/detail/:id', name: 'Detail', component: Detail, props: true },
-    { path: '/favorites', name: 'Favorites', component: Favorites },
-    { path: '/profile', name: 'Profile', component: Profile },
+    {
+      path: '/favorites',
+      name: 'Favorites',
+      component: Favorites,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Profile,
+      meta: { requiresAuth: true },
+    },
     {
       path: '/login',
       name: 'Login',
@@ -39,6 +50,21 @@ const router = createRouter({
     },
     { path: '/test', name: 'test', component: TestPage },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
+  const isLoggedIn = !!userStore.userInfo.id;
+
+  if (isLoggedIn && (to.path === '/login' || to.path === '/signup')) {
+    return next('/');
+  }
+
+  if (!isLoggedIn && to.meta.requiresAuth) {
+    return next('/login');
+  }
+
+  next();
 });
 
 export default router;
