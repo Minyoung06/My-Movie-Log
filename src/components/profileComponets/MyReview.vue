@@ -8,7 +8,7 @@
           alt="포스터"
           class="movie-image"
         />
-        <h3>{{ item.movie.title }}</h3>
+        <h5>{{ item.movie.title }}</h5>
         <p>⭐ {{ item.score }}</p>
       </div>
     </div>
@@ -26,8 +26,10 @@ const myReviews = ref([]);
 onMounted(async () => {
   const ratings = userStore.userInfo.ratings || [];
 
+  const latets3 = ratings.slice(-3).reverse();
+
   const enriched = await Promise.all(
-    ratings.map(async (r) => {
+    latets3.map(async (r) => {
       const movie = await getMovieDetails(r.movieId);
       return movie
         ? {
