@@ -3,6 +3,32 @@ import { ref } from 'vue';
 import { useUserStore } from './userStore';
 import axios from 'axios';
 
+// 환경 구분
+const isProd = import.meta.env.MODE === 'production';
+
+// 사용자 리스트 fetch 함수
+async function fetchUsers() {
+  if (isProd) {
+    const res = await fetch('/My-Movie-Log/users.json');
+    const data = await res.json();
+    return data.users;
+  } else {
+    const res = await axios.get('/api/users');
+    return res.data;
+  }
+}
+
+// 사용자 하나만 fetch하는 함수 (로컬 전용)
+async function fetchSingleUser(userId) {
+  if (isProd) {
+    const users = await fetchUsers();
+    return users.find((u) => u.id === userId);
+  } else {
+    const res = await axios.get(`/api/users/${userId}`);
+    return res.data;
+  }
+}
+
 export const useRatingStore = defineStore('ratingStore', () => {
   const reviews = ref({
     review: '',
@@ -22,9 +48,8 @@ export const useRatingStore = defineStore('ratingStore', () => {
       score: reviews.value.score,
     };
 
-    const res = await axios.get(`/api/users/${user.id}`);
-    const currentUser = res.data;
-    const currentUserRating = [...currentUser.ratings];
+    const currentUser = await fetchSingleUser(user.id); // ✅ 환경에 따라 분기
+    const currentUserRating = [...(currentUser?.ratings || [])];
 
     // 같은 영화 리뷰가 존재하는지 확인
     const movieIndex = currentUserRating.findIndex(
@@ -55,9 +80,8 @@ export const useRatingStore = defineStore('ratingStore', () => {
     const user = userStore.userInfo;
 
     try {
-      const res = await axios.get(`/api/users/${user.id}`);
-      const currentUser = res.data;
-      const currentUserRating = currentUser.ratings;
+      const currentUser = await fetchSingleUser(user.id);
+      const currentUserRating = currentUser?.ratings || [];
 
       const reviewObj = currentUserRating.find(
         (rating) => rating.movieId === movieId
@@ -73,8 +97,7 @@ export const useRatingStore = defineStore('ratingStore', () => {
   // 특정 영화의 상위 3개 리뷰 가져오기
   async function F_TopReviews(movieId) {
     try {
-      const res = await axios.get('/api/users');
-      const users = res.data;
+      const users = await fetchUsers();
       const reviews = users.flatMap((user) => {
         const rating = user.ratings?.find((r) => r.movieId === movieId);
         return rating && rating.review
@@ -106,12 +129,16 @@ export const useRatingStore = defineStore('ratingStore', () => {
       (rating) => rating.movieId !== movieId
     );
 
-    try {
-      await axios.patch(`/api/users/${user.id}`, {
-        ratings: removedRating,
-      });
-    } catch (err) {
-      console.log(err);
+    if (!isProd) {
+      try {
+        await axios.patch(`/api/users/${user.id}`, {
+          ratings: removedRating,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      alert('데모에서는 삭제가 저장되지 않습니다.');
     }
   }
 

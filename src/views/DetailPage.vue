@@ -190,6 +190,11 @@ const addReview = async () => {
 };
 
 const confirmDelete = async () => {
+  if (import.meta.env.MODE === 'production') {
+    alert('데모 페이지에서는 리뷰 삭제가 불가능합니다.');
+    showModal.value = false;
+    return;
+  }
   await ratingStore.D_review(movieId);
   myReview.value = null;
   ratingStore.reviews.review = '';
