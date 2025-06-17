@@ -14,7 +14,10 @@ export const useUserStore = defineStore('userStore', () => {
     // GitHub Pages 환경일 경우 정적 JSON 사용
     if (import.meta.env.MODE === 'production') {
       const res = await fetch('/My-Movie-Log/users.json');
-      return await res.json();
+      const data = await res.json();
+      console.log('[DEBUG] users.json fetched data:', data);
+      console.log('[DEBUG] users.json fetched data.users:', data.users);
+      return data.users;
     } else {
       // 로컬에서는 json-server 사용
       const res = await axios.get('/api/users');
