@@ -182,6 +182,11 @@ const addReview = async () => {
     review,
     score,
   };
+  userStore.userInfo.ratings = [
+    ...userStore.userInfo.ratings.filter((r) => r.movieId !== movieId),
+    { movieId, review, score },
+  ];
+  localStorage.setItem('userInfo', JSON.stringify(userStore.userInfo));
 };
 
 const confirmDelete = async () => {
