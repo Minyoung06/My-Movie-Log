@@ -56,8 +56,9 @@
           <p class="mb-0 small">평점: {{ '⭐'.repeat(myReview.score) }}</p>
           <p class="mb-0 small">내용: {{ myReview.review || '(내용 없음)' }}</p>
         </div>
+
         <!-- 입력폼 -->
-        <form @submit.prevent="addReview" class="review-form">
+        <form v-if="isLogin" @submit.prevent="addReview" class="review-form">
           <div class="input-group">
             <!-- 리뷰 입력창 -->
             <input
@@ -84,6 +85,10 @@
             </button>
           </div>
         </form>
+        <!-- 로그인하지 않은 경우 안내 -->
+        <p v-else class="text-muted" style="margin-top: 1rem">
+          리뷰 작성을 원하시면 <strong>로그인</strong>해주세요.
+        </p>
       </div>
       <div class="review-list my-3 p-3 bg-light rounded">
         <h4 style="color: var(--color-text-primary)">Reviews</h4>
@@ -131,20 +136,41 @@ const myReview = ref(null);
 const ratingStore = useRatingStore();
 const favoritesStore = useFavoritesStore();
 const userStore = useUserStore();
+const isLogin = computed(() => userStore.isLogin);
 
 const showModal = ref(false);
 
-onMounted(async () => {
-  const id = route.params.id;
-  movie.value = await getMovieDetails(id);
-});
+function resetReviewInputs() {
+  ratingStore.reviews.review = '';
+  ratingStore.reviews.score = 0;
+}
 
 watch(
-  () => userStore.userInfo.id,
+  () => route.params.id,
+  () => {
+    resetReviewInputs();
+  }
+);
+
+watch(
+  () => route.params.id,
   async (id) => {
-    if (id) {
-      console.log('[DEBUG] userId is now available:', id);
-      await favoritesStore.R_wishList(id);
+    const newMovieId = Number(id);
+
+    myReview.value = null;
+    ratingStore.reviews.review = '';
+    ratingStore.reviews.score = 0;
+
+    movie.value = await getMovieDetails(newMovieId);
+    await ratingStore.F_TopReviews(newMovieId);
+
+    if (userStore.isLogin) {
+      const res = await ratingStore.R_Review(newMovieId);
+      if (res) {
+        myReview.value = res;
+        ratingStore.reviews.review = res.review;
+        ratingStore.reviews.score = res.score;
+      }
     }
   },
   { immediate: true }
@@ -168,6 +194,11 @@ const toggleWish = async () => {
 };
 
 const addReview = async () => {
+  if (!userStore.isLogin) {
+    alert('리뷰를 작성하려면 로그인이 필요합니다.');
+    return;
+  }
+
   const { review, score } = ratingStore.reviews;
 
   if (score === 0) {
@@ -182,10 +213,12 @@ const addReview = async () => {
     review,
     score,
   };
+
   userStore.userInfo.ratings = [
     ...userStore.userInfo.ratings.filter((r) => r.movieId !== movieId),
     { movieId, review, score },
   ];
+
   localStorage.setItem('userInfo', JSON.stringify(userStore.userInfo));
 };
 
@@ -220,10 +253,6 @@ onMounted(async () => {
       ratingStore.reviews.score = res.score;
     }
   }
-});
-
-onMounted(() => {
-  ratingStore.F_TopReviews(movieId);
 });
 
 const goBack = () => {
