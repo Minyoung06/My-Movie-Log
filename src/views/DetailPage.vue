@@ -176,7 +176,9 @@ watch(
   { immediate: true }
 );
 
-const isWished = computed(() => favoritesStore.wishlist.includes(movieId));
+const isWished = computed(
+  () => isLogin.value && favoritesStore.wishlist.includes(movieId)
+);
 
 const avgScore = computed(() => {
   const reviews = ratingStore.topReviews;
@@ -186,6 +188,11 @@ const avgScore = computed(() => {
 });
 
 const toggleWish = async () => {
+  if (!isLogin.value) {
+    alert('찜 기능은 로그인 후 이용할 수 있습니다.');
+    return;
+  }
+
   if (isWished.value) {
     await favoritesStore.D_wishList(movieId);
   } else {
