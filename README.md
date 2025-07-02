@@ -67,7 +67,25 @@ server: {
 },
 ```
 
-## 5. 기술 스택
+## 🔗 주요 링크
+
+- [🌐 Notion 전체 문서 바로가기](https://shimmering-hope-b8f.notion.site/MyMovieLog-Vue-1dedb7a9621880279b09eacd60532605)
+
+### 🎨 디자인 시안
+
+- [🖌️ Figma 프로토타입 바로가기](https://www.figma.com/proto/aQXFgbruTIOud7hpFcLmFH/My-Movie-Log?node-id=0-1&t=5b9casMG1KIVzfHp-1)
+
+#### 현재 구현 범위
+
+- 화면 간 이동 흐름 (NavBar, 로그인/회원가입, 상세 페이지 등)
+- 전체 페이지 구조 확인 가능
+- 실제 입력, 검색 기능은 추후 추가 예정
+
+### 🐞 트러블슈팅 기록
+
+- [🔧 트러블슈팅 페이지 바로가기](https://shimmering-hope-b8f.notion.site/217db7a96218805e888dd455e9a50fa3)
+
+## 기술 스택
 
 ### Frontend
 
