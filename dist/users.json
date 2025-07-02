@@ -1,0 +1,104 @@
+{
+  "users": [
+    {
+      "id": "test1",
+      "nickname": "홍길동",
+      "password": "testpass1",
+      "wishlist": [550, 278, 950387, 575265],
+      "ratings": [
+        {
+          "movieId": 550,
+          "score": 5,
+          "review": "다시 봐도 명작!"
+        },
+        {
+          "movieId": 950387,
+          "score": 5,
+          "review": "너무 재미있어요!"
+        },
+        {
+          "movieId": 575265,
+          "score": 5,
+          "review": "스릴 넘쳐요"
+        }
+      ]
+    },
+    {
+      "id": "test2",
+      "nickname": "김철수",
+      "password": "testpass2",
+      "wishlist": [950387, 1197306, 575265],
+      "ratings": [
+        {
+          "movieId": 950387,
+          "score": 5,
+          "review": "재미있어요!"
+        },
+        {
+          "movieId": 1197306,
+          "score": 4,
+          "review": "재미있음"
+        },
+        {
+          "movieId": 575265,
+          "score": 5,
+          "review": "잘생김"
+        }
+      ]
+    },
+    {
+      "id": "test3",
+      "nickname": "세번째",
+      "password": "testpass3",
+      "wishlist": [1197306, 447273, 1094473, 575265],
+      "ratings": [
+        {
+          "movieId": 575265,
+          "score": 3,
+          "review": "I love it"
+        },
+        {
+          "movieId": 1094473,
+          "score": 4,
+          "review": "Good"
+        },
+        {
+          "movieId": 1197306,
+          "score": 4,
+          "review": "like it"
+        },
+        {
+          "movieId": 447273,
+          "score": 5,
+          "review": "popular"
+        }
+      ]
+    },
+    {
+      "id": "test4",
+      "nickname": "네번째",
+      "password": "testpass4",
+      "wishlist": [575265],
+      "ratings": [
+        {
+          "movieId": 575265,
+          "score": 4,
+          "review": "좋아요!!"
+        }
+      ]
+    },
+    {
+      "id": "test5",
+      "nickname": "다섯번째",
+      "password": "testpass5",
+      "wishlist": [575265],
+      "ratings": [
+        {
+          "movieId": 575265,
+          "score": 4,
+          "review": "스릴!!"
+        }
+      ]
+    }
+  ]
+}
